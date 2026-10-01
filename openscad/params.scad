@@ -61,3 +61,13 @@ hole_d     = 2.5;                     // deck holes (flow in)
 screen_hole_d = 2.0;                  // lid screen holes (flow out)
 
 printed_bore_tol = 0.1;               // extra clearance on the printed body ID
+
+// ---------- threaded retaining ring (printed body, no tie rods) ----------
+thread_pitch = 4;
+thread_depth = 2;
+thread_len   = 16;          // engaged length (4 turns)
+thread_clr   = 0.3;         // radial clearance on the ring's internal thread
+ring_lip     = 4;           // thickness of the ring's top lip
+ring_lip_r   = 34;          // lip inner radius (clears the outlet barb, bears on the lid flange)
+ring_r       = tube_od/2 + thread_depth + thread_clr + 5;
+lid_th_flange_r = tube_od/2 - 0.2;   // lid flange must pass inside the ring's thread

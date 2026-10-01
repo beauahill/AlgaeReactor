@@ -17,8 +17,8 @@ Water enters a side barb at the bottom, fills a plenum, and rises through the **
 ## Bill of materials
 - Test tube, rimless borosilicate **25 x 200 mm** (the LED tube)
 - LED strip, 8-10 mm wide, ~185 mm x 3 (one per face of `led_spine`) – 12/24 V, no need for waterproof; use a red/blue or full-spectrum "grow" ratio
-- O-rings: **64 x 2.5 mm** x2 (Option A) or x1 (Option B) – tube ends; **24 x 2 mm** x1 – test tube. Nitrile or silicone.
-- 3x M4 threaded rod, ~225 mm; 3x M4 hex nuts (trapped in the base), 3x M4 nut + washer (or wing nut) on top
+- O-rings: **64 x 2.5 mm** x2 (Option A) or x1 (Options B / B2) – tube ends; **24 x 2 mm** x1 – test tube. Nitrile or silicone.
+- Options A / B: 3x M4 threaded rod, ~225 mm; 3x M4 hex nuts (trapped in the base), 3x M4 nut + washer (or wing nut) on top. Option B2 needs none of this.
 - 2x hose, 1/2" (12 mm) ID, to a small pump (~100-300 L/h, throttled) and back to the tank/sump
 - Option A only: acrylic tube 76.2 mm OD x 3.175 mm wall, cut to 190 mm (7.5"), ends square
 
@@ -29,6 +29,7 @@ Water enters a side barb at the bottom, fills a plenum, and rises through the **
   - `lid`: as modelled (plug down, screen on the bed, barb pointing up) – roof is 45 deg
   - `base_acrylic` / `printed_body`: flange on bed; the **horizontal inlet barb** may want a little support under it
   - `deck_plate`: flat, socket ring up
+  - `thread_ring`: exported lip-down on the bed (thread axis vertical). `printed_body_threaded` prints upright like `printed_body`; the thread flanks are 60 deg so they need no supports
   - `led_spine`: upright, or lying down
 - Printed body is **210 mm tall** – needs a >= 210 mm Z build volume. If yours is shorter, reduce `tube_len` in `params.scad` (and use a shorter test tube), or use Option A.
 
@@ -40,6 +41,13 @@ Water enters a side barb at the bottom, fills a plenum, and rises through the **
 5. Thread the M4 rods through the lid and base, nuts in the base pockets, and snug the top nuts evenly. Rods only keep the lid from popping under back-pressure; do not crank them.
 6. Hose: pump -> bottom barb, top barb -> back to the display or sump. Run it, bleed air by tilting, then add chaeto and adjust flow until it just tumbles.
 
+## Option B2: threaded lid
+`printed_body_threaded` has a 4 mm-pitch, 2 mm-deep right-hand thread on the top 16 mm (4 turns). `thread_ring` screws over it and its lip clamps down on the flange of `lid_threaded`, so the lid itself never rotates and the outlet barb stays where you aimed it. The ring clears the barb (ring lip is 34 mm radius, barb reaches 32.8 mm), so **fit the ring before pushing hoses onto the barbs**.
+
+Assembly is the same as above except step 5: drop the lid on, spin the ring down by hand until the lip seats, snug (hand tight is enough; the O-ring does the sealing). Thread clearance is `thread_clr` (0.3 mm per side); if the ring is tight or sloppy on your printer, adjust it and re-export `thread_ring` only. Pitch, depth and length are in `params.scad`.
+
+Checked in CAD: the ring clears the body thread and the lid, and the lip bears on the full flange face. Not yet test-printed. Print the ring alone first and screw it onto the body's thread section (print just the top of `printed_body_threaded` by cropping in your slicer) before committing to the full 210 mm print.
+
 ## Things to check before you print
 - **Measure your acrylic's actual ID** and set `tube_wall`/`tube_od` in `openscad/params.scad`. Extruded tube varies by a few tenths. The O-ring grooves are derived from it for ~15% squeeze.
 - This design has **not been printed or leak-tested**. Print the lid first (smallest, most complex) and test-fit the tube and O-rings before committing to the tall body.
@@ -48,5 +56,5 @@ Water enters a side barb at the bottom, fills a plenum, and rises through the **
 
 ## Files
 - `openscad/params.scad` – every dimension you may want to change
-- `openscad/*.scad` – one file per part, plus `assembly_acrylic.scad` / `assembly_printed.scad` for viewing
+- `openscad/*.scad` – one file per part, plus `assembly_acrylic.scad` / `assembly_printed.scad` / `assembly_threaded.scad` for viewing
 - `stl/` – pre-exported STLs; regenerate with `make` (needs OpenSCAD)
