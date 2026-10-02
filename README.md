@@ -17,7 +17,7 @@ Water enters a side barb at the bottom, fills a plenum, and rises through the **
 ## Bill of materials
 - Test tube, rimless borosilicate **25 x 200 mm** (the LED tube)
 - LED strip, 8-10 mm wide, ~185 mm x 3 (one per face of `led_spine`) – 12/24 V, no need for waterproof; use a red/blue or full-spectrum "grow" ratio
-- O-rings: **64 x 2.5 mm** x2 (Option A) or x1 (Options B / B2) – tube ends; **24 x 2 mm** x1 – test tube. Nitrile or silicone.
+- Gaskets: either buy O-rings or print them in TPU (`gasket.stl`, see below). O-rings: **64 x 2.5 mm** x2 (Option A) or x1 (Options B / B2) – tube ends; **24 x 2 mm** x1 – test tube. Nitrile or silicone.
 - Options A / B: 3x M4 threaded rod, ~225 mm; 3x M4 hex nuts (trapped in the base), 3x M4 nut + washer (or wing nut) on top. Option B2 needs none of this.
 - 2x hose, 1/2" (12 mm) ID, to a small pump (~100-300 L/h, throttled) and back to the tank/sump
 - Option A only: acrylic tube 76.2 mm OD x 3.175 mm wall, cut to 190 mm (7.5"), ends square
@@ -40,6 +40,15 @@ Water enters a side barb at the bottom, fills a plenum, and rises through the **
 4. Fit the 24 x 2 mm O-ring in the lid column groove, then push the test tube (LED already inside) down through the lid until it sits in the deck-plate socket. It protrudes ~11 mm above the lid for the wires.
 5. Thread the M4 rods through the lid and base, nuts in the base pockets, and snug the top nuts evenly. Rods only keep the lid from popping under back-pressure; do not crank them.
 6. Hose: pump -> bottom barb, top barb -> back to the display or sump. Run it, bleed air by tilting, then add chaeto and adjust flow until it just tumbles.
+
+## TPU gaskets (optional)
+`gasket.stl` is one plate with two 64 mm-ID tube gaskets (Option A needs both, Options B/B2 need one) and one 24 mm-ID test-tube gasket. They have the same ID and section size as the O-rings, so they sit in the same grooves. The section is a rounded square rather than round, because a round ring prints poorly flat.
+
+- Filament: **95A TPU**, 0.2 mm layers (0.12 if you want a smoother seal face), **100% infill**, 20-30 mm/s, no supports, little or no retraction. A direct-drive extruder is much easier; on a Bowden setup go slower.
+- Check them: they should be springy and the layers fused. Any gaps or stringing on the sealing faces will leak, so trim strings and reprint a gasket that looks porous.
+- A thin smear of silicone grease (the aquarium or food-safe kind) fills the layer lines and makes them slide on without rolling or twisting. Do not use petroleum grease.
+- **Not tested for sealing.** Printed TPU is not as reliable as a moulded O-ring. If a printed one weeps, swap in a real O-ring; nothing else in the design changes. Print one set and leak-test the lid before trusting it.
+- The test-tube gasket stretches about 4% over the tube; if it feels too stiff to slide, increase its ID by 0.5 mm in `gasket.scad`.
 
 ## Option B2: threaded lid
 `printed_body_threaded` has a 4 mm-pitch, 2 mm-deep right-hand thread on the top 16 mm (4 turns). `thread_ring` screws over it and its lip clamps down on the flange of `lid_threaded`, so the lid itself never rotates and the outlet barb stays where you aimed it. The ring clears the barb (ring lip is 34 mm radius, barb reaches 32.8 mm), so **fit the ring before pushing hoses onto the barbs**.

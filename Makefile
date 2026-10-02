@@ -1,4 +1,4 @@
-PARTS = base_acrylic printed_body printed_body_threaded lid lid_threaded thread_ring deck_plate led_spine
+PARTS = base_acrylic printed_body printed_body_threaded lid lid_threaded thread_ring deck_plate led_spine gasket
 all: $(PARTS:%=stl/%.stl)
 stl/%.stl: openscad/%.scad openscad/params.scad openscad/lib.scad
 	mkdir -p stl && openscad -o $@ $<
