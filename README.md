@@ -53,9 +53,15 @@ Water enters a side barb at the bottom, fills a plenum, and rises through the **
 ## Option B2: threaded lid
 `printed_body_threaded` has a 4 mm-pitch, 2 mm-deep right-hand thread on the top 16 mm (4 turns). `thread_ring` screws over it and its lip clamps down on the flange of `lid_threaded`, so the lid itself never rotates and the outlet barb stays where you aimed it. The ring clears the barb (ring lip is 34 mm radius, barb reaches 32.8 mm), so **fit the ring before pushing hoses onto the barbs**.
 
-Assembly is the same as above except step 5: drop the lid on, spin the ring down by hand until the lip seats, snug (hand tight is enough; the O-ring does the sealing). Thread clearance is `thread_clr` (0.3 mm per side); if the ring is tight or sloppy on your printer, adjust it and re-export `thread_ring` only. Pitch, depth and length are in `params.scad`.
+Assembly is the same as above except step 5: drop the lid on, spin the ring down by hand until the lip seats, snug (hand tight is enough; the O-ring does the sealing).
 
-Checked in CAD: the ring clears the body thread and the lid, and the lip bears on the full flange face. Not yet test-printed. Print the ring alone first and screw it onto the body's thread section (print just the top of `printed_body_threaded` by cropping in your slicer) before committing to the full 210 mm print.
+**Fit-test first.** Print `thread_test.stl` (a 20 mm slice of the body's threaded neck) and `thread_ring.stl`, and make sure the ring spins on freely before printing the 210 mm body. Tolerances live in `params.scad`:
+- `thread_clr` (default 0.5 mm): radial gap on the ring's thread.
+- `thread_ax` (default 0.075 of the pitch, 0.3 mm per side): extra axial gap between teeth.
+- If it is still tight on your printer, raise `thread_clr` to 0.6-0.7 and `thread_ax` to 0.1; if it wobbles, lower them. Only `thread_ring` (and `lid_threaded`) need re-exporting if the body neck is already good, because the ring cuts its thread to match.
+- If the thread feels rough, print the ring at 0.12-0.16 mm layers; a scrap of fine sandpaper on the crests also helps PLA.
+
+Checked in CAD: the ring clears the body thread at every point through a full screw turn, clears the lid, and the lip bears on the full flange face. The first revision used too few slices per turn, so the real thread surface sagged up to 0.34 mm below its nominal radius and the ring and body did not match. That is fixed (72 slices per turn).
 
 ## Things to check before you print
 - **Measure your acrylic's actual ID** and set `tube_wall`/`tube_od` in `openscad/params.scad`. Extruded tube varies by a few tenths. The O-ring grooves are derived from it for ~15% squeeze.

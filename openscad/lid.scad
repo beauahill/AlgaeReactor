@@ -31,7 +31,7 @@ module lid(threaded = false) {
         // outlet screen holes
         hole_rings(screen_hole_d, col_r + 3, bore_r - 2, -plug_h - 0.1, screen_t + 0.2);
         // outlet bore
-        translate([lid_barb_x, 0, 3]) cylinder(d = barb_bore, h = top_z + 30, $fn = 48);
+        translate([lid_barb_x, 0, -6]) cylinder(d = barb_bore, h = top_z + 40, $fn = 48);
         if (!threaded) rod_holes_and_pockets(0, flange_t, false);
     }
 }
