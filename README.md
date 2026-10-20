@@ -49,7 +49,7 @@ How it travels (checked in CAD): the ring drops on with the tabs in the gaps bet
 6. **Before connecting hoses:** put the ring over the lid so its tabs sit in the gaps between the lugs, press down until the lip rests on the lid flange, then turn **clockwise** until it stops (about 70 deg). It will get firmer over the last ~16 deg. Counter-clockwise to remove.
 7. Connect hoses, run it, bleed air by tilting, add chaeto and adjust flow until it just tumbles.
 
-If the ring is too stiff at the end (printer ran fat), reduce `bay_ramp` or raise `lg_free`/lower `lg_comp` accordingly; if the lid stays loose, increase `lg_comp`'s squeeze (smaller `lg_comp`). Both are in `params.scad`.
+Tuning (in `params.scad`): if the ring is too stiff over the last few degrees, raise `lg_comp` (less squeeze, e.g. 1.6). If the lid still feels loose or weeps at the rim, lower `lg_comp` (more squeeze, e.g. 1.2). `lg_comp` has to stay below `lg_free` (2.0). Re-export `printed_tube` and `bayonet_ring` after changing it, because the lug height depends on it.
 
 ## Sealing printed parts (Options B and C)
 Printed PETG, even at 100% infill, is porous at layer joins and thin-to-thick transitions. A leak with no pressure is seepage, not a hole.
