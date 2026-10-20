@@ -3,7 +3,7 @@
 use <lib.scad>
 include <params.scad>
 
-module base_acrylic(moat = false, rods = true) {
+module base_acrylic(moat = false, rods = true, groove_z = 1) {
     difference() {
         union() {
             translate([0, 0, -base_h]) cylinder(r = flange_r, h = base_h);
@@ -12,7 +12,7 @@ module base_acrylic(moat = false, rods = true) {
         }
         plenum_cavity();
         // O-ring groove on plug, low so the O-ring is the last thing between water and the corner
-        translate([0, 0, 1]) difference() {
+        translate([0, 0, groove_z]) difference() {
             cylinder(r = plug_od/2 + 1, h = groove_w);
             translate([0, 0, -1]) cylinder(r = groove_root_r, h = groove_w + 2);
         }

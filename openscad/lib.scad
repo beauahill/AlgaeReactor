@@ -90,3 +90,30 @@ module bayonet_ring_body() {
             polygon([[bay_tab_in, 0], [ro, 0],
                      [ro, bay_tab_h0 + (ro - bay_tab_in)], [bay_tab_in, bay_tab_h0]]);
 }
+
+// Bottom lugs for printed_tube_v2 (tube coords, tube bottom at z = 0). The lug is the lid lug
+// turned over (rotate 180 about x keeps the handedness), so the ramp is on top and rises toward
+// the stop: with the tabs fixed in the base, turning the tube clockwise pulls it down.
+module bayonet_lugs_bottom() {
+    top = bay_lug_h + bay_lug_str;
+    for (i = [0:bay_n - 1]) rotate(i*360/bay_n) {
+        translate([0, 0, top]) rotate([180, 0, 0]) bay_lug();
+        rotate(bay_lug_arc/2) rotate_extrude(angle = bay_stop_arc, $fn = 360)
+            polygon([[bay_lug_r0, 0], [bay_lug_r0 + bay_lug_h, 0],
+                     [bay_lug_r0 + bay_lug_h, cam_stop_h], [bay_lug_r0, cam_stop_h]]);
+    }
+}
+
+// Collar with three inward tabs on the base (base coords, z = 0 at the flange top).
+// Tab undersides are 45 deg cones that mate with the lug tops; thick at the wall, 1 mm at the tip.
+module camlock_socket() {
+    ro = cam_col_in + 0.3;
+    difference() {
+        cylinder(r = cam_col_in + cam_col_wall, h = cam_col_h, $fn = 180);
+        translate([0, 0, -1]) cylinder(r = cam_col_in, h = cam_col_h + 2, $fn = 180);
+    }
+    for (i = [0:bay_n - 1]) rotate(60 + i*360/bay_n - bay_tab_arc/2)
+        rotate_extrude(angle = bay_tab_arc, $fn = 360)
+            polygon([[bay_tab_in, cam_tab_z], [bay_tab_in, cam_tab_z + bay_tab_h0],
+                     [ro, cam_tab_z + bay_tab_h0], [ro, cam_tab_z - (ro - bay_tab_in)]]);
+}

@@ -95,3 +95,13 @@ bay_lock_rot = 60 + bay_lug_arc/2 - bay_tab_arc/2;  // clockwise turn from the d
 // ---------- sealing details ----------
 moat_w       = 4;                           // sealant moat around the tube's outer corner
 moat_d       = 4;
+
+// ---------- bottom cam-lock (printed_tube_v2 twists into base_camlock) ----------
+// Mirror of the lid lock: lugs on the tube bottom, tabs inside a collar on the base.
+// Shares bay_* ramp/tab dimensions and the flat gasket (lg_free -> lg_comp) with the lid.
+cam_col_in   = bay_lug_r0 + bay_lug_h + 0.9;   // collar bore clears the tube's bottom lugs by 0.9
+cam_col_wall = 4;
+cam_col_h    = 12;
+cam_tab_z    = lg_comp + bay_lug_h + bay_lug_str - (bay_tab_in - bay_lug_r0);   // tab underside at its tip, zero gap at the stop
+cam_stop_h   = bay_lug_h + bay_lug_str + bay_tab_h0 + (cam_col_in + 0.3 - bay_tab_in) + 1.5;   // stop wall height (tube coords)
+cam_groove_z = 4;                             // plug O-ring groove raised clear of the tube's bore chamfer

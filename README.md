@@ -2,12 +2,13 @@
 
 All builds share the **deck plate**, the **LED tube** and the same lid design. Pick one:
 
-| | A – acrylic tube | **B – printed tube + bayonet ring (recommended printed build)** | C – one-piece printed body |
-|---|---|---|---|
-| Body | purchased 3" OD x 1/8" wall clear acrylic, 190 mm | plain printed tube (`printed_tube`) on a separate base | tube + base printed as one piece (`printed_body`) |
-| Printed parts | `base_acrylic`, `lid`, `deck_plate` | `printed_tube`, `base_sealed`, `lid_bayonet`, `bayonet_ring`, `deck_plate`, flat lid gasket (`gasket.stl`) | `printed_body`, `lid`, `deck_plate` |
-| Lid retention | 3x M4 rods | **ramped cam-lock ring, no rods** | 3x M4 rods |
-| Leak risk | low (acrylic) | low (see "Sealing") | **known weak spot** at the wall/flange corner – kept for reference only |
+| | A – acrylic tube | B – printed tube + cam-lock lid ring | **D – cam-lock both ends (newest)** | C – one-piece printed body |
+|---|---|---|---|---|
+| Body | purchased 3" OD x 1/8" wall clear acrylic, 190 mm | plain printed tube (`printed_tube`) on a separate base, siliconed | printed tube with lugs at both ends (`printed_tube_v2`) twisted into a socket base | tube + base printed as one piece (`printed_body`) |
+| Printed parts | `base_acrylic`, `lid`, `deck_plate` | `printed_tube`, `base_sealed`, `lid_bayonet`, `bayonet_ring`, `deck_plate`, flat lid gasket (`gasket.stl`) | `printed_tube_v2`, `base_camlock`, `lid_bayonet`, `bayonet_ring`, `deck_plate`, 2 flat gaskets (`gasket_flat.stl`) | `printed_body`, `lid`, `deck_plate` |
+| Lid retention | 3x M4 rods | ramped cam-lock ring, no rods | ramped cam-lock ring | 3x M4 rods |
+| Tube-to-base | O-ring on plug | O-ring + silicone moat | **O-ring + cam-lock, no silicone** | one piece |
+| Leak risk | low (acrylic) | low (see "Sealing") | low; fully serviceable | **known weak spot** at the wall/flange corner – kept for reference only |
 
 Chamber: 69.85 mm ID x ~159 mm tall, ~0.5 L (about 1-2 cups of chaeto) after subtracting the LED tube.
 
@@ -19,7 +20,7 @@ Water enters a side barb at the bottom, fills a plenum, and rises through the **
 - LED strip, 8-10 mm wide, ~185 mm x 3 (one per face of `led_spine`), 12/24 V, no need for waterproof
 - Gaskets: print them in TPU (`gasket.stl`, below) or buy O-rings: **64 x 2.5 mm** x1 (Options B/C) or x2 (Option A, one each end), **24 x 2 mm** x1 for the test tube
 - Options A / C only: 3x M4 threaded rod ~225 mm, 3x M4 hex nuts, 3x M4 nut + washer
-- Option B: a small tube of **aquarium-safe 100% silicone** (no mold inhibitors) for the base moat
+- Option B only: a small tube of **aquarium-safe 100% silicone** (no mold inhibitors) for the base moat (Option D needs none)
 - 2x hose, 1/2" (12 mm) ID, to a small pump (~100-300 L/h, throttled) and back
 - Option A only: acrylic tube 76.2 mm OD x 3.175 mm wall, cut to 190 mm
 
@@ -51,6 +52,29 @@ How it travels (checked in CAD): the ring drops on with the tabs in the gaps bet
 
 Tuning (in `params.scad`): if the ring is too stiff over the last few degrees, raise `lg_comp` (less squeeze, e.g. 1.6). If the lid still feels loose or weeps at the rim, lower `lg_comp` (more squeeze, e.g. 1.2). `lg_comp` has to stay below `lg_free` (2.0). Re-export `printed_tube` and `bayonet_ring` after changing it, because the lug height depends on it.
 
+## Option D: cam-lock at both ends
+Same idea as the lid lock, turned upside down for the base. `printed_tube_v2` has lugs at both ends. `base_camlock` has a 12 mm collar around the plug with three inward tabs. Drop the tube in with its bottom lugs in the gaps between the tabs and twist the **tube clockwise** about 70 deg: the lug ramps ride under the tabs and pull the tube down onto a flat gasket on the flange top, 2.0 mm squeezed to 1.4 mm, with the plug O-ring as the second seal. No silicone, and the tube comes off again for cleaning.
+
+Why the tube twists instead of a second ring: a ring with a closed lip cannot be slipped onto a tube that has lugs at both ends. The socket in the base does the ring's job.
+
+Both locks turn clockwise, so tightening the lid ring (which drags the tube a little through the gasket) tightens the base rather than loosening it. The plug O-ring groove is 3 mm higher on this base so the O-ring sits against the full-diameter bore, above the tube's lead-in chamfer.
+
+**Print (PETG, dried):**
+- `printed_tube_v2`: upright; the bottom lugs sit on the bed. Top lugs have 45 deg undersides, no supports.
+- `base_camlock`: flange on the bed. The tabs inside the collar have 45 deg undersides, no supports. Inlet barb may want a touch of support.
+- `lid_bayonet`, `bayonet_ring`, `deck_plate`: as for Option B.
+- `gasket_flat`: two 2.0 mm TPU flat gaskets (one per end). Or cut from 1.5-2 mm EPDM/silicone sheet: 76.2 mm OD, 70.2 mm ID.
+- `camlock_test_tube` + `camlock_test_base`: print these **first**, with a gasket. The tube slice should drop in, turn freely, firm up over the last ~16 deg and stop. Then `bayonet_test` + `bayonet_ring` for the top, as before.
+
+**Assemble:**
+1. 64 x 2.5 gasket/O-ring into the plug groove. Flat gasket onto the flange top, inside the collar.
+2. Lower the tube over the plug with its bottom lugs between the tabs, press down, twist **clockwise** until it stops.
+3. Deck plate onto the plug rim; 24 x 2 gasket into the lid column; test tube (LED inside) down through the lid into the deck socket.
+4. Flat gasket on the tube rim, lid on, ring on with its tabs between the top lugs, press down, twist **clockwise** to the stop. Do this before connecting hoses.
+5. Hoses, run, bleed air, add chaeto. To open: ring counter-clockwise; to remove the tube from the base: tube counter-clockwise.
+
+Tuning is the same `lg_comp` as Option B (both ends share it); re-export `printed_tube_v2`, `base_camlock` and `bayonet_ring` after changing it. Checked in CAD only: the tube drops in, turns freely, wedges down over the ramp, stops at the stop wall, and clears the deck plate, lid and ring. Not yet printed.
+
 ## Sealing printed parts (Options B and C)
 Printed PETG, even at 100% infill, is porous at layer joins and thin-to-thick transitions. A leak with no pressure is seepage, not a hole.
 - **Epoxy-coat everything wet.** Use a two-part epoxy rated safe for fish and invertebrates (Pond Armor is the usual choice; check the label). Scuff with 220 grit, wipe with isopropyl, pour into the plenum and rotate to coat, pour out the excess, then brush the chamber floor, deck ledge and tube bore. Two coats, then cure about a week and rinse before it goes near the tank. Leak-test with plain water in a bucket first.
@@ -73,5 +97,5 @@ Printed PETG, even at 100% infill, is porous at layer joins and thin-to-thick tr
 
 ## Files
 - `openscad/params.scad` – every dimension you may want to change
-- `openscad/*.scad` – one file per part, plus `assembly_acrylic.scad`, `assembly_printed.scad` (Option C) and `assembly_tube.scad` (Option B) for viewing
+- `openscad/*.scad` – one file per part, plus `assembly_acrylic.scad`, `assembly_printed.scad` (Option C), `assembly_tube.scad` (Option B) and `assembly_camlock.scad` (Option D) for viewing
 - `stl/` – pre-exported STLs; regenerate with `make` (needs OpenSCAD; the lid takes a few minutes)
