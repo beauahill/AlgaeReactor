@@ -5,8 +5,8 @@ All builds share the **deck plate**, the **LED tube** and the same lid design. P
 | | A – acrylic tube | **B – printed tube + bayonet ring (recommended printed build)** | C – one-piece printed body |
 |---|---|---|---|
 | Body | purchased 3" OD x 1/8" wall clear acrylic, 190 mm | plain printed tube (`printed_tube`) on a separate base | tube + base printed as one piece (`printed_body`) |
-| Printed parts | `base_acrylic`, `lid`, `deck_plate` | `printed_tube`, `base_sealed`, `lid_bayonet`, `bayonet_ring`, `deck_plate` | `printed_body`, `lid`, `deck_plate` |
-| Lid retention | 3x M4 rods | **bayonet ring, no rods** | 3x M4 rods |
+| Printed parts | `base_acrylic`, `lid`, `deck_plate` | `printed_tube`, `base_sealed`, `lid_bayonet`, `bayonet_ring`, `deck_plate`, flat lid gasket (`gasket.stl`) | `printed_body`, `lid`, `deck_plate` |
+| Lid retention | 3x M4 rods | **ramped cam-lock ring, no rods** | 3x M4 rods |
 | Leak risk | low (acrylic) | low (see "Sealing") | **known weak spot** at the wall/flange corner – kept for reference only |
 
 Chamber: 69.85 mm ID x ~159 mm tall, ~0.5 L (about 1-2 cups of chaeto) after subtracting the LED tube.
@@ -23,27 +23,33 @@ Water enters a side barb at the bottom, fills a plenum, and rises through the **
 - 2x hose, 1/2" (12 mm) ID, to a small pump (~100-300 L/h, throttled) and back
 - Option A only: acrylic tube 76.2 mm OD x 3.175 mm wall, cut to 190 mm
 
-## Option B: printed tube + bayonet ring
+## Option B: printed tube + cam-lock ring
 Why this instead of a screw thread or a one-piece body:
-- A 76 mm printed thread needs ~0.3 mm accuracy, and a 190 mm PETG tube is never that round at the top. The bayonet has ~1 mm clearances, three lugs and a stop, so it cannot cross-thread.
+- A 76 mm printed thread needs ~0.3 mm accuracy, and a 190 mm PETG tube is never that round at the top. The ring has ~1 mm clearances and three lugs, so it cannot cross-thread.
+- The lug undersides are a **spiral ramp** (about 3 deg, like a hammer-union cam): turning the ring wedges it down, which squeezes a **flat gasket** between the tube rim and the lid flange from 2.0 mm to 1.4 mm. The ramp is shallow enough to be self-locking, and a stop wall ends the turn.
+- The lid also has its own plug O-ring, so the flat gasket is a second seal. Do not overtighten: the stop and the gasket thickness set the clamp.
 - The plain tube has continuous perimeters and **no thin-wall-to-thick-block junction**, which is where the one-piece body leaked.
-- The lid is sealed by its own O-ring, so the ring only has to hold the lid down. It has about 0.8 mm of vertical play.
+
+How it travels (checked in CAD): the ring drops on with the tabs in the gaps between the lugs and turns freely for about 50 deg, then the ramp engages and pulls it down over the next ~16 deg, then a 5 deg flat dwell and the stop (70.5 deg total, clockwise). There is no click or detent; it is held by the self-locking ramp and the gasket's spring. For vibration-prone setups, add a zip tie through a ring scallop and around a lug.
 
 **Print (PETG; transparent PETG shows voids, so dry it first):**
-- `printed_tube`: upright. Walls are 3.1 mm: use 8 perimeters / variable-width walls, 100% infill is not needed. Lugs have 45 deg undersides, no supports.
+- `printed_tube`: upright. Walls are 3.1 mm: use 8 perimeters / variable-width walls. Lug undersides are 45 deg cones, no supports.
 - `base_sealed`: flange on the bed. Inlet barb is horizontal and may want a little support.
 - `lid_bayonet`: as modelled (screen on the bed, barb up).
 - `bayonet_ring`: as exported, lip on the bed. The tabs have 45 deg tops, no supports.
-- `bayonet_test`: print this with `bayonet_ring` **first** (20 min). The ring should drop on and turn 60 deg clockwise to the stop with no force.
+- Flat lid gasket: in `gasket.stl` (TPU, 2.0 mm). Or cut a ring from 1.5-2 mm EPDM/silicone sheet: 76.2 mm OD, 70.2 mm ID.
+- `bayonet_test`: print this with `bayonet_ring` **first** (a short slice of the tube top plus a stand-in lid flange). Stack coupon, gasket, flange disc, ring. The ring should drop on, turn freely, then tighten against the gasket and stop at the end.
 
 **Assemble:**
 1. Fit the 64 x 2.5 gasket/O-ring in the plug groove (it is low on the plug, near the flange).
 2. Run a bead of aquarium silicone into the moat in the flange top, then push the tube down over the plug onto the flange. Smooth a fillet of silicone up the outside of the tube. Let it cure 24-48 h before filling.
 3. Drop the deck plate onto the plug rim.
 4. Fit the 24 x 2 gasket in the lid column, push the test tube (LED inside) down through the lid into the deck-plate socket.
-5. Lower the lid onto the tube (it sits on the rim; its plug O-ring seals).
-6. **Before connecting hoses:** put the ring over the lid so its tabs sit in the gaps between the lugs, press down until the lip rests on the lid flange, then turn **clockwise 60 deg** until it stops. Turn counter-clockwise to remove.
+5. Lay the flat gasket on the tube rim and lower the lid onto it (its plug O-ring seals too).
+6. **Before connecting hoses:** put the ring over the lid so its tabs sit in the gaps between the lugs, press down until the lip rests on the lid flange, then turn **clockwise** until it stops (about 70 deg). It will get firmer over the last ~16 deg. Counter-clockwise to remove.
 7. Connect hoses, run it, bleed air by tilting, add chaeto and adjust flow until it just tumbles.
+
+If the ring is too stiff at the end (printer ran fat), reduce `bay_ramp` or raise `lg_free`/lower `lg_comp` accordingly; if the lid stays loose, increase `lg_comp`'s squeeze (smaller `lg_comp`). Both are in `params.scad`.
 
 ## Sealing printed parts (Options B and C)
 Printed PETG, even at 100% infill, is porous at layer joins and thin-to-thick transitions. A leak with no pressure is seepage, not a hole.
@@ -53,7 +59,7 @@ Printed PETG, even at 100% infill, is porous at layer joins and thin-to-thick tr
 - The base has a 5 mm floor and a chamfered plenum corner so there is no sharp wet corner, the plug O-ring sits low so it is the last barrier before the base corner, and the **moat** gives silicone a mechanical key instead of relying on adhesion to PETG.
 
 ## TPU gaskets (optional)
-`gasket.stl` is one plate with two 64 mm-ID tube gaskets and one 24 mm-ID test-tube gasket, same ID and section as the O-rings, rounded-square so they print flat.
+`gasket.stl` is one plate with two 64 mm-ID tube gaskets, one 24 mm-ID test-tube gasket (same ID and section as the O-rings, rounded-square so they print flat), and the 2.0 mm flat lid gasket for Option B.
 - 95A TPU, 0.2 mm layers, 100% infill, 20-30 mm/s, no supports, little or no retraction. Direct drive is much easier.
 - Trim strings; reprint any that look porous. A thin smear of silicone grease helps them seat and slide.
 - **Not tested for sealing.** If a printed gasket weeps, use a real O-ring; nothing else changes.

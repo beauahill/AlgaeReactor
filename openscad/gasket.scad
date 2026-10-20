@@ -12,7 +12,17 @@ module gasket_tube()     gasket(oring_id, oring_cs);
 // test-tube gasket (lid column groove): same as the 24 x 2 O-ring
 module gasket_testtube() gasket(tt_od - 1, tt_oring_cs);
 
+// flat gasket under the lid flange: sits on the tube rim, the lid plug passes through it
+module gasket_lid() {
+    id = plug_od + 0.65;
+    difference() {
+        cylinder(d = tube_od, h = lg_free, $fn = 180);
+        translate([0, 0, -1]) cylinder(d = id, h = lg_free + 2, $fn = 180);
+    }
+}
+
 // both on one plate: 2x tube gasket (Option A uses two), 1x test tube gasket
 translate([-40, 0, 0]) gasket_tube();
 translate([ 40, 0, 0]) gasket_tube();
 translate([  0, 0, 0]) gasket_testtube();
+translate([  0, 76, 0]) gasket_lid();

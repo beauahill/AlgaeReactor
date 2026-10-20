@@ -36,13 +36,36 @@ module plenum_cavity(c = 3) {
     ]);
 }
 
-// Bayonet lugs on the top of the tube (absolute z; tube spans 0..tube_len)
+// Underside height of the lug relative to its value at the stop, by angle across the lug
+// (-arc/2 = stop end, +arc/2 = entry end). Ramps down toward the stop, then a small catch.
+function bay_dz(th) =
+    let (a = bay_lug_arc/2, dip = -a + 5)
+    th >= dip ? -bay_catch + bay_ramp*(th - dip)/(a - dip) : -bay_catch*(th + a)/5;
+
+// One lug: a swept profile (45 deg chamfered underside whose height follows bay_dz)
+module bay_lug() {
+    M = 45;
+    a = bay_lug_arc/2;
+    top = bay_lug_h + bay_lug_str;
+    pts = [for (j = [0:M])
+        let (th = -a + bay_lug_arc*j/M, dz = bay_dz(th))
+        for (q = [[bay_lug_r0, dz], [bay_lug_r0 + bay_lug_h, bay_lug_h + dz],
+                  [bay_lug_r0 + bay_lug_h, top], [bay_lug_r0, top]])
+            [q[0]*cos(th), q[0]*sin(th), q[1]]];
+    // side quads split into triangles (the sloped quads are not planar); winding FLIP set below
+    faces = concat(
+        [[3, 2, 1, 0], [4*M, 4*M + 1, 4*M + 2, 4*M + 3]],
+        [for (j = [0:M - 1]) for (k = [0:3]) each [
+            [4*j + k, 4*j + (k + 1)%4, 4*(j + 1) + (k + 1)%4],
+            [4*j + k, 4*(j + 1) + (k + 1)%4, 4*(j + 1) + k]]]);
+    polyhedron(pts, faces, convexity = 6);
+}
+
+// Lugs + stop walls on the top of the tube (absolute z; tube spans 0..tube_len)
 module bayonet_lugs() {
     top = bay_lug_h + bay_lug_str;
     for (i = [0:bay_n - 1]) rotate(i*360/bay_n) translate([0, 0, tube_len + bay_lug_z0]) {
-        rotate(-bay_lug_arc/2) rotate_extrude(angle = bay_lug_arc, $fn = 360)
-            polygon([[bay_lug_r0, 0], [bay_lug_r0 + bay_lug_h, bay_lug_h],
-                     [bay_lug_r0 + bay_lug_h, top], [bay_lug_r0, top]]);
+        bay_lug();
         // stop wall on the clockwise side, reaches down past the tab's path
         rotate(-bay_lug_arc/2 - bay_stop_arc) rotate_extrude(angle = bay_stop_arc, $fn = 360)
             polygon([[bay_lug_r0, bay_ring_z0 - 1 - bay_lug_z0],
