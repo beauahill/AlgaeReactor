@@ -27,33 +27,43 @@ module rod_holes_and_pockets(z_bottom, z_top, pockets = true) {
     }
 }
 
-// Right-hand trapezoid thread profile: s = distance from tooth centre (fraction of pitch)
-// -> 0..1 of thread depth. g widens the tooth axially (used for the ring's cutter).
-function tprof(s, g = 0) =
-    let (t = max(abs(s - 0.5) - g, 0))
-    t <= 0.0812 ? 1 : t <= 0.37 ? 1 - (t - 0.0812)/0.2887 : 0;
-
-// External thread from radius r_core to r_core + depth, z = 0..h.
-// n points per turn and n slices per turn: every vertex lands on a neighbour's position
-// one slice up, so the helix is true to ~0.04 mm instead of chord-sagging.
-module thread_solid(r_core, depth, h, g = 0, n = 72) {
-    linear_extrude(height = h, twist = -360*h/thread_pitch,
-                   slices = ceil(h/thread_pitch*n), convexity = 10)
-        polygon([for (k = [0:n - 1])
-            let (a = 360*k/n, r = r_core + depth*tprof(k/n, g))
-            [r*cos(a), r*sin(a)]]);
+// Inlet plenum under the deck: chamfered floor corner so there is no sharp wet corner
+module plenum_cavity(c = 3) {
+    z0 = -base_h + floor_t;
+    rotate_extrude($fn = 120) polygon([
+        [0, z0], [bore_r - c, z0], [bore_r, z0 + c],
+        [bore_r, plug_h + floor_t], [0, plug_h + floor_t]
+    ]);
 }
 
-// Retaining ring, z = 0 at the thread end. Shared by the part file and the assembly.
-module thread_ring_body() {
-    h_thread = thread_len + flange_t;
-    difference() {
-        cylinder(r = ring_r, h = h_thread + ring_lip, $fn = 120);
-        translate([0, 0, -0.01]) thread_solid(tube_od/2 + thread_clr, thread_depth, h_thread + 0.01, thread_ax);
-        translate([0, 0, h_thread - 0.01]) cylinder(r = ring_lip_r, h = ring_lip + 0.02);
-        // lead-in chamfer
-        translate([0, 0, -0.01]) cylinder(r1 = tube_od/2 + thread_depth + thread_clr + 1.5, r2 = tube_od/2 + thread_clr, h = 1.5, $fn = 120);
-        for (i = [0:11]) rotate(i*30) translate([ring_r + 0.5, 0, -1])
-            cylinder(r = 3.5, h = h_thread + ring_lip + 2, $fn = 32);
+// Bayonet lugs on the top of the tube (absolute z; tube spans 0..tube_len)
+module bayonet_lugs() {
+    top = bay_lug_h + bay_lug_str;
+    for (i = [0:bay_n - 1]) rotate(i*360/bay_n) translate([0, 0, tube_len + bay_lug_z0]) {
+        rotate(-bay_lug_arc/2) rotate_extrude(angle = bay_lug_arc, $fn = 360)
+            polygon([[bay_lug_r0, 0], [bay_lug_r0 + bay_lug_h, bay_lug_h],
+                     [bay_lug_r0 + bay_lug_h, top], [bay_lug_r0, top]]);
+        // stop wall on the clockwise side, reaches down past the tab's path
+        rotate(-bay_lug_arc/2 - bay_stop_arc) rotate_extrude(angle = bay_stop_arc, $fn = 360)
+            polygon([[bay_lug_r0, bay_ring_z0 - 1 - bay_lug_z0],
+                     [bay_lug_r0 + bay_lug_h, bay_ring_z0 - 1 - bay_lug_z0],
+                     [bay_lug_r0 + bay_lug_h, top], [bay_lug_r0, top]]);
     }
+}
+
+// Bayonet ring, z = 0 at the tabs. Tabs sit at 60/180/300 deg when the ring is dropped on.
+module bayonet_ring_body() {
+    h = ring_under + ring_lip;
+    ro = bay_bore_r + 0.3;
+    difference() {
+        cylinder(r = ring_r, h = h, $fn = 120);
+        translate([0, 0, -0.01]) cylinder(r = bay_bore_r, h = ring_under + 0.01, $fn = 120);
+        translate([0, 0, ring_under - 0.01]) cylinder(r = ring_lip_r, h = ring_lip + 0.02, $fn = 120);
+        for (i = [0:11]) rotate(i*30) translate([ring_r + 0.5, 0, -1])
+            cylinder(r = 3, h = h + 2, $fn = 32);
+    }
+    for (i = [0:bay_n - 1]) rotate(60 + i*360/bay_n - bay_tab_arc/2)
+        rotate_extrude(angle = bay_tab_arc, $fn = 360)
+            polygon([[bay_tab_in, 0], [ro, 0],
+                     [ro, bay_tab_h0 + (ro - bay_tab_in)], [bay_tab_in, bay_tab_h0]]);
 }

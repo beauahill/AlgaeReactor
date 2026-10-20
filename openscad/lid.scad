@@ -3,9 +3,9 @@
 use <lib.scad>
 include <params.scad>
 
-module lid(threaded = false) {
-    fr = threaded ? lid_th_flange_r : flange_r;
-    r1 = threaded ? 34 : 36;
+module lid(narrow = false) {
+    fr = narrow ? lid_narrow_flange_r : flange_r;
+    r1 = narrow ? 34 : 36;
     difference() {
         union() {
             rotate_extrude() polygon([
@@ -32,7 +32,7 @@ module lid(threaded = false) {
         hole_rings(screen_hole_d, col_r + 3, bore_r - 2, -plug_h - 0.1, screen_t + 0.2);
         // outlet bore
         translate([lid_barb_x, 0, -6]) cylinder(d = barb_bore, h = top_z + 40, $fn = 48);
-        if (!threaded) rod_holes_and_pockets(0, flange_t, false);
+        if (!narrow) rod_holes_and_pockets(0, flange_t, false);
     }
 }
 
